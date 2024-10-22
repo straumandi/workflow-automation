@@ -41,27 +41,19 @@ jobs:
         with:
           report_paths: "**/target/surefire-reports/*.xml"
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
+      - name: Create output directory
+        run: mkdir -p target/test-reports
 
-      - name: Install pyxml2pdf
+      - name: Install JUnit PDF Report
         run: |
-          pip install pyxml2pdf
+          curl -L -o junit-pdf-report.jar https://github.com/benmoss/junit-pdf-report/releases/latest/download/junit-pdf-report.jar
 
-      - name: Convert XML to PDF
+      - name: Convert XML to PDF using JUnit PDF Report
         run: |
-          # Create input and output directories
-          mkdir -p input output
-
-          # Move XML files to input directory
-          mv target/surefire-reports/*.xml input/
-
-          # Convert the XML files to PDF
-          python -m pyxml2pdf.main input/test-results.xml --pdf output/test-report.pdf
+          java -jar junit-pdf-report.jar -o target/test-reports/test-report.pdf target/surefire-reports/*.xml
 
       - name: Upload PDF Report
         uses: actions/upload-artifact@v4
         with:
           name: test-report-pdf
+          path: target/test-reports/*.pdf
