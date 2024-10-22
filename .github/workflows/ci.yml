@@ -41,11 +41,11 @@ jobs:
         with:
           report_paths: "**/target/surefire-reports/*.xml"
 
-          - name: Set up Python
-          uses: actions/setup-python@v4
-          with:
-            python-version: '3.x'
-  
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
       - name: Install pyxml2pdf
         run: |
           pip install pyxml2pdf
