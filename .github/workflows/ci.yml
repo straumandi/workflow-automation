@@ -40,3 +40,21 @@ jobs:
         if: success() || failure()
         with:
           report_paths: "**/target/surefire-reports/*.xml"
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install xml2pdf
+        run: |
+          pip install xml2pdf
+
+      - name: Convert XML to PDF
+        run: |
+          xml2pdf -o test-report.pdf target/surefire-reports/*.xml
+
+      - name: Upload PDF Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report-pdf
