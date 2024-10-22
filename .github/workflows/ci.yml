@@ -41,18 +41,25 @@ jobs:
         with:
           report_paths: "**/target/surefire-reports/*.xml"
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
-
-      - name: Install xml2pdf
+          - name: Set up Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: '3.x'
+  
+      - name: Install pyxml2pdf
         run: |
-          pip install xml2pdf
+          pip install pyxml2pdf
 
       - name: Convert XML to PDF
         run: |
-          xml2pdf -o test-report.pdf target/surefire-reports/*.xml
+          # Create input and output directories
+          mkdir -p input output
+
+          # Move XML files to input directory
+          mv target/surefire-reports/*.xml input/
+
+          # Convert the XML files to PDF
+          python -m pyxml2pdf.main input/test-results.xml --pdf output/test-report.pdf
 
       - name: Upload PDF Report
         uses: actions/upload-artifact@v4
